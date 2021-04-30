@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: com.millionseleshi
+testFramework: kotest
+sourceLanguage: kotlin
+buildTool: gradle
+features: [annotation-api, app-name, aws-lambda, aws-v2-sdk, gradle, kotest, kotlin, kotlin-application, logback, readme, shade, yaml]
