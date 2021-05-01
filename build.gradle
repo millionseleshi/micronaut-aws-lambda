@@ -30,6 +30,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut.aws:micronaut-aws-sdk-v2")
+    implementation("software.amazon.awssdk:dynamodb")
+    implementation ("software.amazon.awssdk:dynamodb-enhanced")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     testImplementation("io.micronaut:micronaut-http-client")
