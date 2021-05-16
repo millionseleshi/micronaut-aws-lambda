@@ -11,7 +11,6 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import java.util.*
 import javax.validation.Valid
 
-//import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 @Controller
 open class BookController {
