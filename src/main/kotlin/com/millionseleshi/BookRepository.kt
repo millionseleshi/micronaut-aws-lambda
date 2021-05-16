@@ -10,6 +10,5 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 data class BookRepository(
         @get:DynamoDbPartitionKey
         var name: String? = null,
-        @get: DynamoDbSortKey
         var isbn: String? = null
 )

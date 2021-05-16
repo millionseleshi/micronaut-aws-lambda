@@ -41,14 +41,14 @@ open class BookController {
     open fun findOne(name: String): BookRepository? {
         val bookTable: DynamoDbTable<BookRepository> = dynamoDbTable()
         val key = Key.builder().partitionValue(AttributeValue.builder().s(name).build()).build()
-        return bookTable.getItem(key)
+        return bookTable.getItem { r -> r.key(key) }
     }
 
     @Delete("/book/{name}")
-    open fun deleteOne(name: String) {
+    open fun deleteOne(name: String): BookRepository? {
         val bookTable: DynamoDbTable<BookRepository> = dynamoDbTable()
         val key = Key.builder().partitionValue(AttributeValue.builder().s(name).build()).build()
-        bookTable.deleteItem(key)
+        return bookTable.deleteItem { r -> r.key(key) }
     }
 
     private fun dynamoDbTable(): DynamoDbTable<BookRepository> {
