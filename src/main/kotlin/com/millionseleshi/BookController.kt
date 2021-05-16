@@ -1,17 +1,17 @@
 package com.millionseleshi
 
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Post
-import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider
+import io.micronaut.http.annotation.*
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable
+import software.amazon.awssdk.enhanced.dynamodb.Key
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import java.util.*
 import javax.validation.Valid
 
+//import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 @Controller
 open class BookController {
@@ -20,11 +20,35 @@ open class BookController {
     open fun save(@Valid @Body book: Book): BookRepository {
         val bookSaved = BookRepository()
         val bookTable: DynamoDbTable<BookRepository> = dynamoDbTable()
-        bookSaved.id = UUID.randomUUID().toString()
         bookSaved.name = book.name
         bookSaved.isbn = UUID.randomUUID().toString()
         bookTable.putItem(bookSaved)
         return bookSaved
+    }
+
+    @Get("/books")
+    open fun findAll(): ArrayList<BookRepository> {
+        val bookRepository = ArrayList<BookRepository>()
+        val bookTable: DynamoDbTable<BookRepository> = dynamoDbTable()
+        val results = bookTable.scan().items().iterator()
+        while (results.hasNext()) {
+            bookRepository.add(results.next())
+        }
+        return bookRepository
+    }
+
+    @Get("/book/{name}")
+    open fun findOne(name: String): BookRepository? {
+        val bookTable: DynamoDbTable<BookRepository> = dynamoDbTable()
+        val key = Key.builder().partitionValue(AttributeValue.builder().s(name).build()).build()
+        return bookTable.getItem(key)
+    }
+
+    @Delete("/book/{name}")
+    open fun deleteOne(name: String) {
+        val bookTable: DynamoDbTable<BookRepository> = dynamoDbTable()
+        val key = Key.builder().partitionValue(AttributeValue.builder().s(name).build()).build()
+        bookTable.deleteItem(key)
     }
 
     private fun dynamoDbTable(): DynamoDbTable<BookRepository> {
@@ -34,7 +58,6 @@ open class BookController {
 
         val dynamoDbClient = DynamoDbClient.builder()
                 .region(region)
-                .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
                 .build()
 
         val dynamoDbClientEnhancedClient = DynamoDbEnhancedClient.builder()

@@ -9,8 +9,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 @DynamoDbBean
 data class BookRepository(
         @get:DynamoDbPartitionKey
-        var id: String? = null,
-        @get: DynamoDbSortKey
         var name: String? = null,
+        @get: DynamoDbSortKey
         var isbn: String? = null
 )
